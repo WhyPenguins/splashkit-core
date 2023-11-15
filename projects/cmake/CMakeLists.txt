@@ -89,6 +89,7 @@ else()
 				   -sUSE_SDL_MIXER=2 \
 				   -sUSE_SDL_IMAGE=2 \
 				   -sSDL2_IMAGE_FORMATS='[\"bmp\",\"png\",\"xpm\"]' \
+				   --post-js ${SK_SRC}/test/SplashKitWasmGlue.js \
 				   -sEXPORTED_RUNTIME_METHODS=ccall,cwrap")
 endif()
 
@@ -109,6 +110,7 @@ file(GLOB SOURCE_FILES
 file(GLOB TEST_SOURCE_FILES
     "${SK_SRC}/test/*.cpp"
 )
+list(FILTER TEST_SOURCE_FILES EXCLUDE REGEX ".*SplashKitWasmGlue\\.cpp$")
 
 #file(GLOB UNIT_TEST_SOURCE_FILES
 #    "${SK_SRC}/test/unit_tests/*.cpp"
