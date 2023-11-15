@@ -1,3 +1,5 @@
+set(CMAKE_C_COMPILER "emcc")
+set(CMAKE_CXX_COMPILER "emcc")
 cmake_minimum_required(VERSION 3.2)
 project(splashkit)
 
@@ -11,6 +13,7 @@ set(SK_EXT "${CMAKE_CURRENT_SOURCE_DIR}/../../coresdk/external")
 set(SK_LIB "${CMAKE_CURRENT_SOURCE_DIR}/../../coresdk/lib")
 set(SK_OUT "${CMAKE_CURRENT_SOURCE_DIR}/../../out")
 set(SK_BIN "${CMAKE_CURRENT_SOURCE_DIR}/../../bin")
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
 if (WIN32 OR MSYS OR MINGW)
   SET(MSYS "true")
@@ -75,30 +78,21 @@ elseif(MSYS)
                     -lSDL2main")
 # LINUX PROJECT FLAGS
 else()
-    set(LIB_FLAGS "-lSDL2 \
-                   -lSDL2_mixer \
-                   -lSDL2_ttf \
-                   -lSDL2_gfx \
-                   -lSDL2_image \
-                   -lSDL2_net \
-                   -lpthread \
-                   -lbz2 \
-                   -lFLAC \
-                   -lvorbis \
-                   -lz \
-                   -lpng16 \
-                   -lvorbisfile \
-                   -logg \
-                   -lwebp \
-                   -lfreetype \
-                   -lcurl \
-                   -lncurses \
+    set(LIB_FLAGS "-lpthread \
                    -ldl \
-                   -lstdc++fs")
+				   -s LINKABLE=1 \
+				   -s EXPORT_ALL=1 \
+				   -sUSE_SDL=2 \
+				   -sUSE_SDL_TTF=2 \
+				   -sUSE_SDL_GFX=2 \
+				   -sUSE_SDL_NET=2 \
+				   -sUSE_SDL_MIXER=2 \
+				   -sUSE_SDL_IMAGE=2 \
+				   -sSDL2_IMAGE_FORMATS='[\"bmp\",\"png\",\"xpm\"]'")
 endif()
 
 # FLAGS
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -sUSE_SDL=2")
 
 # SOURCE FILES
 file(GLOB SOURCE_FILES
@@ -115,9 +109,9 @@ file(GLOB TEST_SOURCE_FILES
     "${SK_SRC}/test/*.cpp"
 )
 
-file(GLOB UNIT_TEST_SOURCE_FILES
-    "${SK_SRC}/test/unit_tests/*.cpp"
-)
+#file(GLOB UNIT_TEST_SOURCE_FILES
+#    "${SK_SRC}/test/unit_tests/*.cpp"
+#)
 
 # SKSDK FILE INCLUDES
 file(GLOB INCLUDE_FILES
@@ -159,6 +153,7 @@ endif()
 
 # MACRO DEFINITIONS #
 add_definitions(-DELPP_THREAD_SAFE)
+add_definitions(-DWINDOWS)
 
 #### END SETUP ####
 #### SplashKitBackend STATIC LIBRARY ####
@@ -211,7 +206,7 @@ set_property(TARGET sktest PROPERTY POSITION_INDEPENDENT_CODE FALSE)
 target_link_libraries(sktest SplashKitBackend)
 target_link_libraries(sktest ${LIB_FLAGS})
 
-# target_link_options(sktest PUBLIC "LINKER:-U,___darwin_check_fd_set_overflow")
+#target_link_options(sktest PUBLIC "LINKER:-U,___darwin_check_fd_set_overflow")
 
 set_target_properties(sktest
     PROPERTIES
@@ -219,9 +214,9 @@ set_target_properties(sktest
 )
 
 # Copy resources folder in
-add_custom_command(TARGET sktest
-    PRE_BUILD COMMAND
-    ${CMAKE_COMMAND} -E copy_directory "${SK_SRC}/test/Resources" $<TARGET_FILE_DIR:sktest>/Resources)
+#add_custom_command(TARGET sktest
+#    PRE_BUILD COMMAND
+#    ${CMAKE_COMMAND} -E copy_directory "${SK_SRC}/test/Resources" $<TARGET_FILE_DIR:sktest>/Resources)
 
 # if (MSYS)
 #     add_custom_command(TARGET sktest
@@ -233,17 +228,17 @@ add_custom_command(TARGET sktest
 #### END sktest EXECUTABLE ####
 
 #### skunit_tests EXECUTABLE ####
-add_executable(skunit_tests ${UNIT_TEST_SOURCE_FILES})
-set_property(TARGET skunit_tests PROPERTY POSITION_INDEPENDENT_CODE FALSE)
+#add_executable(skunit_tests ${UNIT_TEST_SOURCE_FILES})
+#set_property(TARGET skunit_tests PROPERTY POSITION_INDEPENDENT_CODE FALSE)
 
 # target_link_options(skunit_tests PUBLIC "LINKER:-U,___darwin_check_fd_set_overflow")
-target_link_libraries(skunit_tests SplashKitBackend)
-target_link_libraries(skunit_tests ${LIB_FLAGS})
+#target_link_libraries(skunit_tests SplashKitBackend)
+#target_link_libraries(skunit_tests ${LIB_FLAGS})
 
-set_target_properties(skunit_tests
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${SK_BIN}
-        )
+#set_target_properties(skunit_tests
+#        PROPERTIES
+#        RUNTIME_OUTPUT_DIRECTORY ${SK_BIN}
+#        )
 #### END sktest EXECUTABLE ####
 
 install(TARGETS SplashKitBackend DESTINATION lib)

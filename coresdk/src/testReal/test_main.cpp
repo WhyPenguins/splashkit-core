@@ -37,22 +37,22 @@ void setup_tests()
     add_test("Geometry", run_geometry_test);
     add_test("Graphics", run_graphics_test);
     add_test("Input", run_input_test);
-    add_test ("Logging", run_logging_test);
+    //add_test ("Logging", run_logging_test);
     add_test("Physics", run_physics_test);
     add_test("Resources", run_resources_tests);
     add_test("Shape drawing", run_shape_drawing_test);
     add_test("Sprite tests", run_sprite_test);
-    add_test("Terminal", run_terminal_test);
+    //add_test("Terminal", run_terminal_test);
     add_test("Text", run_text_test);
     add_test("Timers", run_timer_test);
     add_test("Windows", run_windows_tests);
     add_test("Cave Escape", test_cave_escape);
-    add_test("Networking", run_networking_test);
-    add_test("Web Server", run_web_server_tests);
-    add_test("RESTful Web Service", run_restful_web_service);
-    add_test("UDP Networking Test", run_udp_networking_test);
-    add_test("TCP Networking Test", run_tcp_networking_test);
-    add_test("Twitter Test", run_twitter_test);
+    //add_test("Networking", run_networking_test);
+    //add_test("Web Server", run_web_server_tests);
+    //add_test("RESTful Web Service", run_restful_web_service);
+    //add_test("UDP Networking Test", run_udp_networking_test);
+    //add_test("TCP Networking Test", run_tcp_networking_test);
+    //add_test("Twitter Test", run_twitter_test);
 }
 
 int main()

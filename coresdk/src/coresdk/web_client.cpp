@@ -19,7 +19,7 @@
 
 using std::ofstream;
 using std::ios;
-
+#undef WINDOWS
 #ifdef WINDOWS
 #include <Windows.h>
 #endif

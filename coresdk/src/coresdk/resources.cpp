@@ -16,7 +16,7 @@
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
 #endif
-
+#undef WINDOWS
 #ifdef WINDOWS
 #include <windows.h>
 #endif

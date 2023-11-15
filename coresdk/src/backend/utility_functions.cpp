@@ -20,7 +20,7 @@
 
 #include <unistd.h>
 #include <sys/types.h>
-
+#undef WINDOWS
 #ifndef WINDOWS
 #include <pwd.h>
 #else

@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <curl/curl.h>
+//#include <curl/curl.h>
 namespace splashkit_lib
 {
     struct request_stream
@@ -56,7 +56,7 @@ namespace splashkit_lib
     static size_t read_request_body(void *ptr, size_t size, size_t nmemb, void *stream)
     {
         // not actually a
-        request_stream *request = static_cast<request_stream *>(stream);
+        /*request_stream *request = static_cast<request_stream *>(stream);
 
         unsigned long str_len = strlen(request->body);
 
@@ -72,25 +72,26 @@ namespace splashkit_lib
             strncpy((char*)ptr, request->body + request->at, sizeof(char) * to_read);
             request->at += to_read;
             return to_read;
-        }
+        }*/
 
         return 0;
     }
 
     void sk_init_web()
     {
-        curl_global_init(CURL_GLOBAL_ALL);
+        //SEAN_EDIT//curl_global_init(CURL_GLOBAL_ALL);
     }
 
     void sk_finalise_web()
     {
-        curl_global_cleanup();
+        //SEAN_EDIT//curl_global_cleanup();
     }
 
-    void _init_curl(CURL *curl_handle, const string &host, unsigned short port)
+   /* void _init_curl(CURL *curl_handle, const string &host, unsigned short port)
     {
         // specify URL to get
-        curl_easy_setopt(curl_handle, CURLOPT_URL, host.c_str());
+        //SEAN_EDIT
+		/*curl_easy_setopt(curl_handle, CURLOPT_URL, host.c_str());
 
         // set port
         curl_easy_setopt(curl_handle, CURLOPT_PORT, port);
@@ -106,6 +107,8 @@ namespace splashkit_lib
     struct curl_slist *_setup_curl_upload(CURL *curl_handle, const string &body, const vector<string> &headers)
     {
         // header list
+		//SEAN_EDIT
+		/*
         struct curl_slist *list = NULL;
 
         if (headers.size() > 0)
@@ -117,9 +120,9 @@ namespace splashkit_lib
         }
         else
         {
-            list = curl_slist_append(list, "Content-Type: application/json;charset=UTF8");
-            list = curl_slist_append(list, "Accept: application/json, text/plain, */*");
-        }
+            list = curl_slist_append(list, "Content-Type: application/json;charset=UTF8");*/
+            //list = curl_slist_append(list, "Accept: application/json, text/plain, */*");
+       /* }
 
         curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, list);
         curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, body.c_str());
@@ -128,9 +131,9 @@ namespace splashkit_lib
     }
 
     void _setup_curl_download(CURL *curl_handle, request_stream *result)
-    {
+    {//SEAN_EDIT//
         // send all data to this function
-        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_memory_callback);
+        /*curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_memory_callback);
 
         // pass in the result as the location to write to
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)result);
@@ -139,7 +142,7 @@ namespace splashkit_lib
     sk_http_response *_create_response(CURL *curl_handle, CURLcode res, request_stream &data)
     {
         // check for errors
-        if(res != CURLE_OK)
+        /*if(res != CURLE_OK)
         {
             LOG(ERROR) << curl_easy_strerror(res);
             return nullptr;
@@ -160,17 +163,17 @@ namespace splashkit_lib
         else
             result->content_type = "";
 
-        /* cleanup curl stuff */
+        /* cleanup curl stuff *
         curl_easy_cleanup(curl_handle);
 
         result->message = data.body;
         result->message_size = data.at;
         return result;
-    }
+    }*/
 
     sk_http_response *sk_http_post(const string &host, unsigned short port, const string &body, const vector<string> &headers)
     {
-        request_stream data_read = { nullptr, 0 };
+        /*request_stream data_read = { nullptr, 0 };
 
         // init the curl session
         CURL *curl_handle = curl_easy_init();;
@@ -186,12 +189,12 @@ namespace splashkit_lib
         // free headers
         curl_slist_free_all(list);
 
-        return _create_response(curl_handle, res, data_read);
+        return _create_response(curl_handle, res, data_read);*/
     }
 
     sk_http_response *sk_http_get(const string &host, unsigned short port)
     {
-        request_stream data_read = { nullptr, 0 };
+        /*request_stream data_read = { nullptr, 0 };
 
         // init the curl session
         CURL *curl_handle = curl_easy_init();;
@@ -203,12 +206,12 @@ namespace splashkit_lib
         // get it!
         res = curl_easy_perform(curl_handle);
 
-        return _create_response(curl_handle, res, data_read);
+        return _create_response(curl_handle, res, data_read);*/
     }
 
     sk_http_response *sk_http_put(const string &host, unsigned short port, const string &body)
     {
-        request_stream data_read = { nullptr, 0 };
+        /*request_stream data_read = { nullptr, 0 };
 
         // init the curl session
         CURL *curl_handle = curl_easy_init();;
@@ -219,63 +222,63 @@ namespace splashkit_lib
 
         // header list
         struct curl_slist *list = NULL;
-        list = curl_slist_append(list, "Content-Type: application/json;charset=UTF8");
-        list = curl_slist_append(list, "Accept: application/json, text/plain, */*");
-        curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, list);
+        list = curl_slist_append(list, "Content-Type: application/json;charset=UTF8");*/
+        //list = curl_slist_append(list, "Accept: application/json, text/plain, */*");
+        //curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, list);
 
         /* we want to use our own read function */
-        curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, read_request_body);
+        //curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, read_request_body);
 
         /* enable uploading */
-        curl_easy_setopt(curl_handle, CURLOPT_UPLOAD, 1L);
+        //curl_easy_setopt(curl_handle, CURLOPT_UPLOAD, 1L);
 
-        request_stream data = { strdup(body.c_str()), 0 };
+        //request_stream data = { strdup(body.c_str()), 0 };
 
         /* now specify which pointer to pass to our callback */
-        curl_easy_setopt(curl_handle, CURLOPT_READDATA, &data);
+        //curl_easy_setopt(curl_handle, CURLOPT_READDATA, &data);
 
         /* Set the size of the file to upload */
-        curl_easy_setopt(curl_handle, CURLOPT_INFILESIZE, (curl_off_t)strlen(data.body));
+        //curl_easy_setopt(curl_handle, CURLOPT_INFILESIZE, (curl_off_t)strlen(data.body));
 
         /* Now run off and do what you've been told! */
-        res = curl_easy_perform(curl_handle);
+        //res = curl_easy_perform(curl_handle);
 
-        free(data.body);
+        //free(data.body);
 
         // free headers
-        curl_slist_free_all(list);
+        //curl_slist_free_all(list);
 
-        return _create_response(curl_handle, res, data_read);
+        //return _create_response(curl_handle, res, data_read);
     }
 
     sk_http_response *sk_http_delete(const string &host, unsigned short port, const string &body)
     {
-        request_stream data_read = { nullptr, 0 };
+        //request_stream data_read = { nullptr, 0 };
 
         // init the curl session
-        CURL *curl_handle = curl_easy_init();;
-        CURLcode res;
+        //CURL *curl_handle = curl_easy_init();;
+        //CURLcode res;
 
 
         //TODO: Add headers param
-        _init_curl(curl_handle, host, port);
-        struct curl_slist *list = _setup_curl_upload(curl_handle, body, {});
-        _setup_curl_download(curl_handle, &data_read);
+        //_init_curl(curl_handle, host, port);
+        //struct curl_slist *list = _setup_curl_upload(curl_handle, body, {});
+        //_setup_curl_download(curl_handle, &data_read);
 
-        curl_easy_setopt(curl_handle, CURLOPT_CUSTOMREQUEST, "DELETE");
+        //curl_easy_setopt(curl_handle, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         // get it!
-        res = curl_easy_perform(curl_handle);
+        //res = curl_easy_perform(curl_handle);
 
         // free headers
-        curl_slist_free_all(list);
+        //curl_slist_free_all(list);
 
-        return _create_response(curl_handle, res, data_read);
+        //return _create_response(curl_handle, res, data_read);
     }
 
     sk_http_response *sk_http_make_request(const sk_http_request &request)
     {
-        internal_sk_init();
+        /*internal_sk_init();
 
         switch (request.method)
         {
@@ -289,6 +292,6 @@ namespace splashkit_lib
                 return sk_http_delete(request.uri, request.port, request.body);
             default:
                 return nullptr;
-        }
+        }*/
     }
 }

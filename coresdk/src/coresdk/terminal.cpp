@@ -8,11 +8,7 @@
 
 #include <easylogging++.h>
 
-#ifdef WINDOWS
-    #include <ncursesw/ncurses.h>
-#else
-    #include <ncurses.h>
-#endif
+
 
 #include "types.h"
 
@@ -50,7 +46,7 @@ namespace splashkit_lib
     int map_color(color clr)
     {
         // Try and find it first...
-        if ( _color_map.count(clr) > 0 )
+        /*if ( _color_map.count(clr) > 0 )
             return _color_map[clr];
 
         // Now need to register it...
@@ -70,12 +66,12 @@ namespace splashkit_lib
         init_color(result, r, g, b);
         _color_map[clr] = result;
 
-        return result;
+        return result;*/
     }
 
     int map_color_pair(color fg, color bg)
     {
-        pair<color, color> clr_pair = pair<color, color>(fg, bg);
+        /*pair<color, color> clr_pair = pair<color, color>(fg, bg);
 
         // Find it?
         if ( _color_pair_map.count(clr_pair) > 0 )
@@ -87,7 +83,7 @@ namespace splashkit_lib
 
         init_pair(result, map_color(fg), map_color(bg));
 
-        return result;
+        return result;*/
     }
 
     color color_black();
@@ -115,7 +111,7 @@ namespace splashkit_lib
 
     void activate_advanced_terminal()
     {
-        if ( _ncurses_active ) return;
+       /* if ( _ncurses_active ) return;
 
         if ( initscr() != nullptr )
         {
@@ -164,41 +160,41 @@ namespace splashkit_lib
         else
         {
             LOG(WARNING) << "Failed to activate advanced terminal.";
-        }
+        }*/
     }
 
     void set_terminal_echo_input(bool value)
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to set echo status";
             return;
         }
 
         if ( value ) echo();
-        else noecho();
+        else noecho();*/
     }
 
     void clear_terminal()
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to clear the terminal";
             return;
         }
 
-        clear();
+        clear();*/
     }
 
     void refresh_terminal()
     {
-        if ( not _ncurses_active )
+       /* if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to refresh the terminal";
             return;
         }
 
-        refresh();
+        refresh();*/
     }
 
     bool advanced_terminal_active()
@@ -208,22 +204,22 @@ namespace splashkit_lib
 
     void end_advanced_terminal()
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must have activated advanced terminal before ending them";
             return;
         }
 
         endwin();
-        _ncurses_active = false;
+        _ncurses_active = false;*/
     }
 
     void write(string text)
     {
-        if ( _ncurses_active )
-            printw("%s", text.c_str());
-        else
-            cout << text;
+        //if ( _ncurses_active )
+        //    printw("%s", text.c_str());
+        //else
+        //    cout << text;
     }
     
     void write(int data)
@@ -243,18 +239,12 @@ namespace splashkit_lib
 
     void write_line()
     {
-        if (_ncurses_active )
-            printw("\n");
-        else
-            cout << endl;
+
     }
 
     void write_line(string line)
     {
-        if (_ncurses_active )
-            printw("%s\n", line.c_str());
-        else
-            cout << line << endl;
+
     }
     
     void write_line(int data)
@@ -274,7 +264,7 @@ namespace splashkit_lib
 
     int terminal_width()
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to get terminal width";
             return 0;
@@ -283,24 +273,24 @@ namespace splashkit_lib
         int x, y;
         getmaxyx(stdscr,y,x);
 
-        return x;
+        return x;*/
     }
 
     int terminal_height()
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to get terminal height";
             return 0;
         }
         int x, y;
         getmaxyx(stdscr,y,x);
-        return y;
+        return y;*/
     }
 
     void set_terminal_colors(color foreground, color background)
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to print bold text";
             return;
@@ -313,41 +303,41 @@ namespace splashkit_lib
 
         int pair = map_color_pair(foreground, background);
         attron(COLOR_PAIR(pair));
-        bkgdset(COLOR_PAIR(pair));
+        bkgdset(COLOR_PAIR(pair));*/
     }
 
     void set_terminal_bold(bool value)
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to print bold text";
             return;
         }
 
         if (value) attron(A_BOLD);
-        else attroff(A_BOLD);
+        else attroff(A_BOLD);*/
     }
 
     void move_cursor_to(int x, int y)
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             LOG(WARNING) << "You must activate advanced terminal features to move within the terminal";
             return;
         }
 
-        move(y, x);
+        move(y, x);*/
     }
 
     void write_at(string text, int x, int y)
     {
-        move_cursor_to(x, y);
-        write(text);
+        //move_cursor_to(x, y);
+        //write(text);
     }
 
     string read_line()
     {
-        if ( not _ncurses_active )
+        /*if ( not _ncurses_active )
         {
             string result;
             getline(std::cin, result);
@@ -358,17 +348,17 @@ namespace splashkit_lib
             char line[2096];
             getnstr(line, 2095);
             return string(line);
-        }
+        }*/
     }
 
     char read_char()
     {
-        char result = 0;
+        /*char result = 0;
         if ( not _ncurses_active )
             cin >> result;
         else
             result = getch();
 
-        return result;
+        return result;*/
     }
 }
