@@ -88,7 +88,8 @@ else()
 				   -sUSE_SDL_NET=2 \
 				   -sUSE_SDL_MIXER=2 \
 				   -sUSE_SDL_IMAGE=2 \
-				   -sSDL2_IMAGE_FORMATS='[\"bmp\",\"png\",\"xpm\"]'")
+				   -sSDL2_IMAGE_FORMATS='[\"bmp\",\"png\",\"xpm\"]' \
+				   -sEXPORTED_RUNTIME_METHODS=ccall,cwrap")
 endif()
 
 # FLAGS
