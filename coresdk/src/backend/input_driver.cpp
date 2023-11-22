@@ -11,6 +11,10 @@
 #include <SDL.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include "backend_types.h"
 #include "core_driver.h"
 #include "input_driver.h"
@@ -637,6 +641,10 @@ namespace splashkit_lib
                 }
             }
         }
+
+#ifdef __EMSCRIPTEN__
+        emscripten_sleep(0);
+#endif
     }
 
     int sk_window_close_requested(sk_drawing_surface* surf)

@@ -266,7 +266,7 @@ add_custom_command(TARGET sktest
 
 
 if (EMSCRIPTEN)
-    set_target_properties(sktest PROPERTIES LINK_FLAGS "--preload-file ${SK_SRC}/test/Resources@Resources")
+    set_target_properties(sktest PROPERTIES LINK_FLAGS "--preload-file ${SK_SRC}/test/Resources@Resources -sASYNCIFY")
 endif()
 
 # if (MSYS)
@@ -287,7 +287,7 @@ target_link_libraries(skunit_tests SplashKitBackend)
 target_link_libraries(skunit_tests ${LIB_FLAGS})
 
 if (EMSCRIPTEN)
-    set_target_properties(skunit_tests PROPERTIES LINK_FLAGS "--preload-file ${SK_SRC}/test/Resources@Resources")
+    set_target_properties(skunit_tests PROPERTIES LINK_FLAGS "--preload-file ${SK_SRC}/test/Resources@Resources -sASYNCIFY")
 endif()
 
 set_target_properties(skunit_tests
