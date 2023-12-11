@@ -185,6 +185,7 @@ if (MSYS)
                                            stdc++
                                            ws2_32
                                            libncursesw
+                                           opengl32
                                            )
 elseif(APPLE)
     # To make a universal single static library from dependent

@@ -54,7 +54,8 @@ static void test_window(mu_Context *ctx) {
     if (mu_header(ctx, "Window Info")) {
       mu_Container *win = mu_get_current_container(ctx);
       char buf[64];
-      mu_layout_row(ctx, 2, (int[]) { 54, -1 }, 0);
+      int row[] = { 54, -1 };
+      mu_layout_row(ctx, 2, row, 0);
       mu_label(ctx,"Position:");
       sprintf(buf, "%d, %d", win->rect.x, win->rect.y); mu_label(ctx, buf);
       mu_label(ctx, "Size:");
@@ -63,7 +64,8 @@ static void test_window(mu_Context *ctx) {
 
     /* labels + buttons */
     if (mu_header_ex(ctx, "Test Buttons", MU_OPT_EXPANDED)) {
-      mu_layout_row(ctx, 3, (int[]) { 86, -110, -1 }, 0);
+      int row[] = { 86, -110, -1 };
+      mu_layout_row(ctx, 3, row, 0);
       mu_label(ctx, "Test buttons 1:");
       if (mu_button(ctx, "Button 1")) { write_log("Pressed button 1"); }
       if (mu_button(ctx, "Button 2")) { write_log("Pressed button 2"); }
@@ -79,7 +81,8 @@ static void test_window(mu_Context *ctx) {
 
     /* tree */
     if (mu_header_ex(ctx, "Tree and Text", MU_OPT_EXPANDED)) {
-      mu_layout_row(ctx, 2, (int[]) { 140, -1 }, 0);
+      int row[] = { 140, -1 };
+      mu_layout_row(ctx, 2, row, 0);
       mu_layout_begin_column(ctx);
       if (mu_begin_treenode(ctx, "Test 1")) {
         if (mu_begin_treenode(ctx, "Test 1a")) {
@@ -95,7 +98,8 @@ static void test_window(mu_Context *ctx) {
         mu_end_treenode(ctx);
       }
       if (mu_begin_treenode(ctx, "Test 2")) {
-        mu_layout_row(ctx, 2, (int[]) { 54, 54 }, 0);
+        int row[] = { 54, 54 };
+        mu_layout_row(ctx, 2, row, 0);
         if (mu_button(ctx, "Button 3")) { write_log("Pressed button 3"); }
         if (mu_button(ctx, "Button 4")) { write_log("Pressed button 4"); }
         if (mu_button(ctx, "Button 5")) { write_log("Pressed button 5"); }
@@ -112,7 +116,8 @@ static void test_window(mu_Context *ctx) {
       mu_layout_end_column(ctx);
 
       mu_layout_begin_column(ctx);
-      mu_layout_row(ctx, 1, (int[]) { -1 }, 0);
+      int row2[] = { -1 };
+      mu_layout_row(ctx, 1, row2, 0);
       mu_text(ctx, "Lorem ipsum dolor sit amet, consectetur adipiscing "
         "elit. Maecenas lacinia, sem eu lacinia molestie, mi risus faucibus "
         "ipsum, eu varius magna felis a nulla.");
@@ -121,10 +126,12 @@ static void test_window(mu_Context *ctx) {
 
     /* background color sliders */
     if (mu_header_ex(ctx, "Background Color", MU_OPT_EXPANDED)) {
-      mu_layout_row(ctx, 2, (int[]) { -78, -1 }, 74);
+      int row[] = { -78, -1 };
+      mu_layout_row(ctx, 2, row, 74);
       /* sliders */
       mu_layout_begin_column(ctx);
-      mu_layout_row(ctx, 2, (int[]) { 46, -1 }, 0);
+      int row2[] = { 46, -1 };
+      mu_layout_row(ctx, 2, row2, 0);
       mu_label(ctx, "Red:");   mu_slider(ctx, &bg[0], 0, 255);
       mu_label(ctx, "Green:"); mu_slider(ctx, &bg[1], 0, 255);
       mu_label(ctx, "Blue:");  mu_slider(ctx, &bg[2], 0, 255);
@@ -145,10 +152,11 @@ static void test_window(mu_Context *ctx) {
 static void log_window(mu_Context *ctx) {
   if (mu_begin_window(ctx, "Log Window", mu_rect(350, 40, 300, 200))) {
     /* output text panel */
-    mu_layout_row(ctx, 1, (int[]) { -1 }, -25);
+    int row[] = { -1 };
+    mu_layout_row(ctx, 1, row, -25);
     mu_begin_panel(ctx, "Log Output");
     mu_Container *panel = mu_get_current_container(ctx);
-    mu_layout_row(ctx, 1, (int[]) { -1 }, -1);
+    mu_layout_row(ctx, 1, row, -1);
     mu_text(ctx, logbuf);
     mu_end_panel(ctx);
     if (logbuf_updated) {
@@ -159,7 +167,8 @@ static void log_window(mu_Context *ctx) {
     /* input textbox + submit button */
     static char buf[128];
     int submitted = 0;
-    mu_layout_row(ctx, 2, (int[]) { -70, -1 }, 0);
+    int row2[] = { -70, -1 };
+    mu_layout_row(ctx, 2, row2, 0);
     if (mu_textbox(ctx, buf, sizeof(buf)) & MU_RES_SUBMIT) {
       mu_set_focus(ctx, ctx->last_id);
       submitted = 1;
@@ -207,7 +216,8 @@ static void style_window(mu_Context *ctx) {
 
   if (mu_begin_window(ctx, "Style Editor", mu_rect(350, 250, 300, 240))) {
     int sw = mu_get_current_container(ctx)->body.w * 0.14;
-    mu_layout_row(ctx, 6, (int[]) { 80, sw, sw, sw, sw, -1 }, 0);
+    int row[] = { 80, sw, sw, sw, sw, -1 };
+    mu_layout_row(ctx, 6, row, 0);
     for (int i = 0; colors[i].label; i++) {
       mu_label(ctx, colors[i].label);
       uint8_slider(ctx, &ctx->style->colors[i].r, 0, 255);
@@ -231,22 +241,26 @@ static void process_frame(mu_Context *ctx) {
 
 
 
-static const char button_map[256] = {
-  [ SDL_BUTTON_LEFT   & 0xff ] =  MU_MOUSE_LEFT,
-  [ SDL_BUTTON_RIGHT  & 0xff ] =  MU_MOUSE_RIGHT,
-  [ SDL_BUTTON_MIDDLE & 0xff ] =  MU_MOUSE_MIDDLE,
-};
+static char button_map[256];
+static char key_map[256];
 
-static const char key_map[256] = {
-  [ SDLK_LSHIFT       & 0xff ] = MU_KEY_SHIFT,
-  [ SDLK_RSHIFT       & 0xff ] = MU_KEY_SHIFT,
-  [ SDLK_LCTRL        & 0xff ] = MU_KEY_CTRL,
-  [ SDLK_RCTRL        & 0xff ] = MU_KEY_CTRL,
-  [ SDLK_LALT         & 0xff ] = MU_KEY_ALT,
-  [ SDLK_RALT         & 0xff ] = MU_KEY_ALT,
-  [ SDLK_RETURN       & 0xff ] = MU_KEY_RETURN,
-  [ SDLK_BACKSPACE    & 0xff ] = MU_KEY_BACKSPACE,
-};
+void initialize_button_and_key_map(){
+  button_map[ SDL_BUTTON_LEFT   & 0xff ] =  MU_MOUSE_LEFT;
+  button_map[ SDL_BUTTON_RIGHT  & 0xff ] =  MU_MOUSE_RIGHT;
+  button_map[ SDL_BUTTON_MIDDLE & 0xff ] =  MU_MOUSE_MIDDLE;
+
+
+
+  key_map[ SDLK_LSHIFT       & 0xff ] = MU_KEY_SHIFT;
+  key_map[ SDLK_RSHIFT       & 0xff ] = MU_KEY_SHIFT;
+  key_map[ SDLK_LCTRL        & 0xff ] = MU_KEY_CTRL;
+  key_map[ SDLK_RCTRL        & 0xff ] = MU_KEY_CTRL;
+  key_map[ SDLK_LALT         & 0xff ] = MU_KEY_ALT;
+  key_map[ SDLK_RALT         & 0xff ] = MU_KEY_ALT;
+  key_map[ SDLK_RETURN       & 0xff ] = MU_KEY_RETURN;
+  key_map[ SDLK_BACKSPACE    & 0xff ] = MU_KEY_BACKSPACE;
+}
+
 
 
 static int text_width(mu_Font font, const char *text, int len) {
@@ -265,8 +279,10 @@ void run_ui_tests()
   SDL_Init(SDL_INIT_EVERYTHING);
   r_init();
 
+  initialize_button_and_key_map();
+
   /* init microui */
-  mu_Context *ctx = malloc(sizeof(mu_Context));
+  mu_Context *ctx = (mu_Context*)malloc(sizeof(mu_Context));
   mu_init(ctx);
   ctx->text_width = text_width;
   ctx->text_height = text_height;
