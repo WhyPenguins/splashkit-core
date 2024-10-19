@@ -18,6 +18,8 @@ jobs:
           sudo apt-get install -y build-essential cmake libpng-dev libcurl4-openssl-dev libsdl2-dev libsdl2-mixer-dev libsdl2-gfx-dev libsdl2-image-dev libsdl2-net-dev libsdl2-ttf-dev libmikmod-dev libbz2-dev libflac-dev libvorbis-dev libwebp-dev 
       - name: setup display
         run: /sbin/start-stop-daemon --start --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 800x600x24 -ac +extension GLX
+      - name: setup audio
+        run: jackd -d dummy &
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
