@@ -729,6 +729,7 @@ TEST_CASE("program is put to sleep for a specified number of milliseconds", "[de
         auto end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         bool within_threshold = duration >= DELAY - DELAY_THRESHOLD && duration <= DELAY + DELAY_THRESHOLD;
+		std::cout<<"ACTUAL DURATION:"<<duration<<std::endl;
         REQUIRE(within_threshold);
     }
 }
