@@ -45,6 +45,7 @@ if (APPLE)
                    -framework AudioToolbox \
                    -framework CoreAudio \
                    -framework CoreVideo \
+                   -framework Accelerate \
                    -lSDL2 \
                    -lSDL2_mixer \
                    -lSDL2_ttf \
