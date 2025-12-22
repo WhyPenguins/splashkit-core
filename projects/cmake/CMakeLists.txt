@@ -275,8 +275,9 @@ ExternalProject_Add(
         -DLLAMA_BUILD_TOOLS=OFF
         -DLLAMA_BUILD_EXAMPLES=OFF
         -DLLAMA_BUILD_SERVER=OFF
-        -DLLAMA_CUBLAS=OFF
-        -DLLAMA_METAL=OFF
+        -DGGML_CUBLAS=OFF
+        -DGGML_METAL=OFF
+        -DGGML_VULKAN=OFF
         -DBUILD_SHARED_LIBS=OFF
         -DLLAMA_BUILD_COMMON=OFF
         -DLLAMA_TOOLS_INSTALL=OFF
@@ -290,15 +291,15 @@ ExternalProject_Get_Property(llama_ext INSTALL_DIR)
 
 foreach(lib llama ggml ggml-cpu ggml-base)
     add_library(${lib} STATIC IMPORTED GLOBAL)
-    if (MSYS)
+    if (MSYS AND NOT "${lib}" STREQUAL "llama") # llama still ends up as libllama.a on Windows, unsure why
         set_target_properties(${lib} PROPERTIES
             IMPORTED_LOCATION
-                ${INSTALL_DIR}/lib/${lib}.a
+                ${INSTALL_DIR}/lib/${lib}.a # no lib prefix
         )
     else()
         set_target_properties(${lib} PROPERTIES
             IMPORTED_LOCATION
-                ${INSTALL_DIR}/lib/lib${lib}.a
+                ${INSTALL_DIR}/lib/lib${lib}.a # lib prefix
         )
     endif()
     add_dependencies(${lib} llama_ext)
