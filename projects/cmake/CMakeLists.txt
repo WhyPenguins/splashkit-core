@@ -289,16 +289,20 @@ ExternalProject_Add(
 
 ExternalProject_Get_Property(llama_ext INSTALL_DIR)
 
-foreach(lib libllama libggml libggml-cpu libggml-base)
+foreach(lib llama ggml ggml-cpu ggml-base)
     add_library(${lib} STATIC IMPORTED GLOBAL)
+    find_library(${lib}_PATH
+        NAMES ${lib} lib${lib}
+        PATHS ${INSTALL_DIR}/lib
+        NO_DEFAULT_PATH
+    )
     set_target_properties(${lib} PROPERTIES
-        IMPORTED_LOCATION
-            ${INSTALL_DIR}/lib/${lib}.a
+        IMPORTED_LOCATION ${${lib}_PATH}
     )
     add_dependencies(${lib} llama_ext)
 endforeach()
 
-set(LLAMA_LIB_FLAGS libllama libggml libggml-cpu libggml-base)
+set(LLAMA_LIB_FLAGS llama ggml ggml-cpu ggml-base)
 
 # MACRO DEFINITIONS #
 add_definitions(-DELPP_THREAD_SAFE)
