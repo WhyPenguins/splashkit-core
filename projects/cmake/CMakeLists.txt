@@ -283,7 +283,6 @@ ExternalProject_Add(
         -DCMAKE_BUILD_TYPE=Release
         -DGGML_STATIC=ON
         -DGGML_OPENMP=OFF
-        -DLLAMA_OPENMP=OFF
         -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
 )
 
@@ -291,14 +290,17 @@ ExternalProject_Get_Property(llama_ext INSTALL_DIR)
 
 foreach(lib llama ggml ggml-cpu ggml-base)
     add_library(${lib} STATIC IMPORTED GLOBAL)
-    find_library(${lib}_PATH
-        NAMES ${lib} lib${lib}
-        PATHS ${INSTALL_DIR}/lib
-        NO_DEFAULT_PATH
-    )
-    set_target_properties(${lib} PROPERTIES
-        IMPORTED_LOCATION ${${lib}_PATH}
-    )
+    if (MSYS)
+        set_target_properties(${lib} PROPERTIES
+            IMPORTED_LOCATION
+                ${INSTALL_DIR}/lib/${lib}.a
+        )
+    else()
+        set_target_properties(${lib} PROPERTIES
+            IMPORTED_LOCATION
+                ${INSTALL_DIR}/lib/lib${lib}.a
+        )
+    endif()
     add_dependencies(${lib} llama_ext)
 endforeach()
 
